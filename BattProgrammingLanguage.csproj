@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>netcoreapp1.1;net45</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="BattInterpreter.Functions.cs" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <RuntimeIdentifiers>win7-x64;osx.10.11-x64;ubuntu.16.04-x64</RuntimeIdentifiers>
+  </PropertyGroup>
+
+</Project>
