@@ -2,6 +2,9 @@
 
 BATT is a simple stack-based programming language, inspired by FORTH & Reverse Polish Notation. There are no variables, and everything is on a stack.
 
+Usage:
+`battc [path to program]`
+
 # Examples
 
 ````
@@ -47,3 +50,5 @@ Will output
 34
 55
 ````
+
+More examples can be found inside the `Examples/` folder.
