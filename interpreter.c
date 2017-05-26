@@ -61,40 +61,40 @@ program_state* init(token_list *tokens, int token_count)
 
 int contains(void **array, int len, void *target)
 {
-	for (int i = 0; i < len; i++)
-		if (array[i] == target)
-			return 1;
-	return 0;
+    for (int i = 0; i < len; i++)
+        if (array[i] == target)
+            return 1;
+    return 0;
 }
 
 // Clean up the program's memory.
 void clean(program_state *state)
 {
-	void** pointers = malloc(sizeof(void*) * state->program_size + state->memory_counter);
-	int sharedcounter = 0;
+    void** pointers = malloc(sizeof(void*) * state->program_size + state->memory_counter);
+    int sharedcounter = 0;
 
     for (int i = 0; i < state->program_size; ++i)
-    {	
-		if (!contains(pointers, sharedcounter, state->program[i]))
-		{
-			free_token(state->program[i]);
-			pointers[sharedcounter++] = state->program[i];
-		}
+    {   
+        if (!contains(pointers, sharedcounter, state->program[i]))
+        {
+            free_token(state->program[i]);
+            pointers[sharedcounter++] = state->program[i];
+        }
     }
 
     for (int i = 0; i < state->memory_counter; ++i)
     {
-		if (!contains(pointers, sharedcounter, state->memory[i]))
-		{
-			free_token(state->memory[i]);
-			pointers[sharedcounter++] = state->memory[i];
-		}
+        if (!contains(pointers, sharedcounter, state->memory[i]))
+        {
+            free_token(state->memory[i]);
+            pointers[sharedcounter++] = state->memory[i];
+        }
     }
     
-	free(state->program);
+    free(state->program);
     free(state->calltable);
 
-	free(state);
+    free(state);
 }
 
 // Run to the end of program
@@ -129,14 +129,14 @@ void execute_token(program_state *state, token *t)
 
     switch (t->type)
     {
-	case quote:
-    	;
-		token *quotedToken = copy_token((token*)t->value.data);
+    case quote:
+        ;
+        token *quotedToken = copy_token((token*)t->value.data);
         memory_push(state, quotedToken);
         break;
     case func_def:
         state->inside_func_def = 1;        
-		char *name = (char*)state->program[state->program_counter++]->value.data;
+        char *name = (char*)state->program[state->program_counter++]->value.data;
         def_func(state, name, state->program_counter);
         break;
     case func_end:

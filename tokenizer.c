@@ -29,25 +29,25 @@ void free_token(token *t)
 
 token* copy_token(token* origin)
 {
-	token *output = malloc(sizeof(token));
+    token *output = malloc(sizeof(token));
 
-	output->type = origin->type;
-	
-	if (origin->type == literal_number)
-		output->value.literal = origin->value.literal;
-	else if (origin->type == literal_string || origin->type == func_call || origin->type == func_def)
-	{
-		int len = strlen((char*)origin->value.data) + 1;
-		output->value.data = malloc(sizeof(char) * len);
-		memset(output->value.data, 0, sizeof(char) * len);
-		memcpy(output->value.data, origin->value.data, len);
-	}
-	else if (origin->type == quote)
-	{
-		output->value.data = copy_token((token*)origin->value.data);
-	}
+    output->type = origin->type;
+    
+    if (origin->type == literal_number)
+        output->value.literal = origin->value.literal;
+    else if (origin->type == literal_string || origin->type == func_call || origin->type == func_def)
+    {
+        int len = strlen((char*)origin->value.data) + 1;
+        output->value.data = malloc(sizeof(char) * len);
+        memset(output->value.data, 0, sizeof(char) * len);
+        memcpy(output->value.data, origin->value.data, len);
+    }
+    else if (origin->type == quote)
+    {
+        output->value.data = copy_token((token*)origin->value.data);
+    }
 
-	return output;
+    return output;
 }
 
 
@@ -122,7 +122,7 @@ token_list* tokenize(char *program, int len, int *token_count)
             {
                 token *thisToken;
 
-				buffer[bufferCounter] = '\0';
+                buffer[bufferCounter] = '\0';
 
                 thisToken = create_literal(buffer, bufferCounter);
 
@@ -147,7 +147,7 @@ token_list* tokenize(char *program, int len, int *token_count)
 
             bufferCounter = 0;
             insideWrap = 0;
-			continue;
+            continue;
         }
 
         if (program[i] == '@')
@@ -156,30 +156,30 @@ token_list* tokenize(char *program, int len, int *token_count)
             buffer[bufferCounter++] = program[i];
     }
 
-	if (bufferCounter > 0)
-	{
-		token *thisToken;
-		buffer[bufferCounter] = '\0';
-		thisToken = create_literal(buffer, bufferCounter);
+    if (bufferCounter > 0)
+    {
+        token *thisToken;
+        buffer[bufferCounter] = '\0';
+        thisToken = create_literal(buffer, bufferCounter);
 
-		if (insideWrap)
-		{
-			token *wrapper = malloc(sizeof(token));
-			wrapper->type = quote;
-			wrapper->value.data = thisToken;
-			thisToken = wrapper;
-		}
+        if (insideWrap)
+        {
+            token *wrapper = malloc(sizeof(token));
+            wrapper->type = quote;
+            wrapper->value.data = thisToken;
+            thisToken = wrapper;
+        }
 
-		token_list *node = malloc(sizeof(token_list));
-		node->data = thisToken;
-		node->next = NULL;
+        token_list *node = malloc(sizeof(token_list));
+        node->data = thisToken;
+        node->next = NULL;
 
-		if (currentNode != NULL)
-			currentNode->next = node;
-		else root = node;
-		currentNode = node;
-		(*token_count)++;
-	}
+        if (currentNode != NULL)
+            currentNode->next = node;
+        else root = node;
+        currentNode = node;
+        (*token_count)++;
+    }
 
     return root;
 }

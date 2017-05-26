@@ -8,20 +8,20 @@
 int main(int argc, char *argv[])
 {
     FILE *script;
-	char *path;
+    char *path;
 
-	init_table();
+    init_table();
     
-	if (argc <= 1)
+    if (argc <= 1)
     {
 #ifndef _DEBUG
         puts("USAGE: battc [path to script]\n");
         return 0;
 #else
-		path = "test.batt";
+        path = "test.batt";
 #endif
     }
-	else path = argv[1];
+    else path = argv[1];
 
     if ((script = fopen(path, "r")))
     {
@@ -41,9 +41,9 @@ int main(int argc, char *argv[])
 
         run(program);
         clean(program);
-		//free(program);
+        //free(program);
         program = NULL;
-		fclose(script);
+        fclose(script);
     }
     else
     {
