@@ -1,4 +1,0 @@
-"Enter your name" println
-
-"Good morning " getln +
-println

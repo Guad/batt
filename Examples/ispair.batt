@@ -1,6 +1,0 @@
-proc ispair
-    dup ; duplicate va;
-    2 % ; take mod % 2
-    !   ; invert
-end
-
