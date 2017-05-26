@@ -233,7 +233,7 @@ void print(program_state *state)
 
     if (try_get_string(right_t, buffer))
     {
-        puts(buffer);
+        printf(buffer);
     }
     else
     {
@@ -253,7 +253,6 @@ void println(program_state *state)
     if (try_get_string(right_t, buffer))
     {
         puts(buffer);
-        putc('\n', stdout);
     }
     else
     {
