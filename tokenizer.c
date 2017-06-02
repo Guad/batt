@@ -115,7 +115,7 @@ token_list* tokenize(char *program, int len, int *token_count)
         if (program[i] == '"')
             insideQuote = !insideQuote;
 
-        if ((program[i] == ' ' || program[i] == '\t' || program[i] == '\n') && !insideQuote)
+        if ((program[i] == ' ' || program[i] == '\t' || program[i] == '\n' || program[i] == '\r') && !insideQuote)
         {
             if (bufferCounter > 0)
             {
