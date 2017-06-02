@@ -17,9 +17,10 @@ unsigned long int jenkins_one_at_a_time_hash(const unsigned char* key, size_t le
     return hash;
 }
 
-int get_cell(const char *key)
+int get_cell(const char *key, unsigned long int *hash)
 {
-    return jenkins_one_at_a_time_hash(key, strlen(key)) % MAX_CELLS;
+    *hash = jenkins_one_at_a_time_hash(key, strlen(key));
+    return  *hash % MAX_CELLS;
 }
 
 hashtable* create_table()
@@ -31,22 +32,28 @@ hashtable* create_table()
 
 void table_set(hashtable *table, char *key, int value)
 {
-    int cell = get_cell(key);
+    unsigned long int hash;
+    int cell = get_cell(key, &hash);
 
     table->cells[cell] = value;
+    table->hashes[cell] = hash;
 }
 
 int table_get(hashtable *table, char *key)
 {
-    int cell = get_cell(key);
+    unsigned long int hash;
+    int cell = get_cell(key, &hash);
 
+    if (hash != table->hashes[cell])
+        return 0; // In case of a hash collision, return default value.
     return table->cells[cell];
 }
 
 int table_exists(hashtable *table, char *key)
 {
-    int cell = get_cell(key);
-    return table->cells[cell] != 0;
+    unsigned long int hash;
+    int cell = get_cell(key, &hash);
+    return table->cells[cell] != 0 && table->hashes[cell] == hash;
 }
 
 calltable* create_calltable()
@@ -58,20 +65,26 @@ calltable* create_calltable()
 
 void calltable_set(calltable *table, char *key, func_ptr value)
 {
-    int cell = get_cell(key);
+    unsigned long int hash;
+    int cell = get_cell(key, &hash);
 
     table->cells[cell] = value;
+    table->hashes[cell] = hash;
 }
 
 func_ptr calltable_get(calltable *table, char *key)
 {
-    int cell = get_cell(key);
+    unsigned long int hash;
+    int cell = get_cell(key, &hash);
 
+    if (hash != table->hashes[cell])
+        return 0;
     return table->cells[cell];
 }
 
 int calltable_exists(calltable *table, char *key)
 {
-    int cell = get_cell(key);
-    return table->cells[cell] != 0;
+    unsigned long int hash;
+    int cell = get_cell(key, &hash);
+    return table->cells[cell] != 0 && table->hashes[cell] == hash;
 }

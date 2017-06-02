@@ -7,11 +7,13 @@ typedef void (*func_ptr)(struct program_state_s *state);
 typedef struct
 {
     int cells[MAX_CELLS];
+    unsigned long int hashes[MAX_CELLS];
 } hashtable;
 
 typedef struct
 {
     func_ptr cells[MAX_CELLS];
+    unsigned long int hashes[MAX_CELLS];
 } calltable;
 
 hashtable* create_table();
