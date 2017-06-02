@@ -38,8 +38,7 @@ token* copy_token(token* origin)
     else if (origin->type == literal_string || origin->type == func_call || origin->type == func_def)
     {
         int len = strlen((char*)origin->value.data) + 1;
-        output->value.data = malloc(sizeof(char) * len);
-        memset(output->value.data, 0, sizeof(char) * len);
+        output->value.data = malloc(sizeof(char) * len);        
         memcpy(output->value.data, origin->value.data, len);
     }
     else if (origin->type == quote)
