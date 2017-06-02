@@ -44,11 +44,11 @@ void ftoa(float n, char *res)
         offset = 1;
     }
 
-    while (ipart)
+    do
     {
         res[idigits - ++counter + offset] = ipart % 10 + '0';
         ipart /= 10;
-    }
+    } while (ipart);
 
     if (fpart != 0)
         res[counter++ + offset] = '.';  
@@ -399,7 +399,7 @@ void equals(program_state *state)
         char buf1[256], buf2[256];
         if (try_get_string(first, buf1) && try_get_string(second, buf2))
         {
-            if (strcmp(buf1, buf2))
+            if (!strcmp(buf1, buf2))
                 output->value.literal = 1;
             else output->value.literal = 0;
         }
