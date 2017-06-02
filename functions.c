@@ -501,6 +501,35 @@ void not(program_state *state)
     free_token(first);
 }
 
+void concat(program_state *state)
+{
+    token *right_t = memory_pop(state);
+    token *left_t = memory_pop(state);
+
+    char buffer1[256], buffer2[256];
+
+    if (try_get_string(right_t, buffer2) && try_get_string(left_t, buffer1))
+    {
+        char *buffer3 = malloc(sizeof(char) * 512);
+        strcpy(buffer3, buffer1);
+        strcat(buffer3, buffer2);
+        
+        token *newToken = malloc(sizeof(token));
+        newToken->type = literal_string;
+        newToken->value.data = buffer3;
+
+        memory_push(state, newToken);
+    }
+    else
+    {
+        printf("Expected a string or number for concat.\n");
+        abort_program(state);
+    }
+
+    free_token(right_t);
+    free_token(left_t);
+}
+
 void pass(program_state *state)
 {
     
@@ -532,6 +561,7 @@ void init_table()
     calltable_set(g_calltable, "<", &lt);
     calltable_set(g_calltable, "!", &not);
     calltable_set(g_calltable, "pass", &pass);
+    calltable_set(g_calltable, "concat", &concat);
 
 }
 

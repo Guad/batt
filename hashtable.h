@@ -1,9 +1,7 @@
 #pragma once
 
 #define MAX_CELLS 500
-//#include "interpreter.h"
 
-//struct program_state;
 typedef void (*func_ptr)(struct program_state_s *state);
 
 typedef struct
