@@ -1,6 +1,6 @@
 #pragma once
 
-#define MAX_CELLS 256
+#define MAX_CELLS 500
 //#include "interpreter.h"
 
 //struct program_state;
