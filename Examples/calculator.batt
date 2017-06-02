@@ -1,0 +1,27 @@
+proc do_sum
+    pop +
+end
+
+proc do_sub
+    pop -
+end
+
+proc do_mul
+    pop *
+end
+
+proc do_div
+    pop /
+end
+
+proc operate
+    dup "+" = @do_sum if
+    dup "-" = @do_sub if
+    dup "*" = @do_mul if
+    dup "/" = @do_div if
+end
+
+"Enter two numbers and an operator" println
+getln getln ; Numbers
+getln ; Operator
+operate println

@@ -11,11 +11,24 @@
 
 void memory_push(program_state *state, token *data)
 {
-    state->memory[state->memory_counter++] = data;
+    if (state->memory_counter == MAX_STACK_SIZE - 1)
+    {
+        puts("ERROR: Stack overflow");
+        abort_program(state);
+    }
+    else
+        state->memory[state->memory_counter++] = data;
 }
 
 token* memory_pop(program_state *state)
 {
+    if (state->memory_counter == 0)
+    {
+        puts("ERROR: Stack underflow");
+        abort_program(state);
+        exit(1);
+    }
+
     token* t = state->memory[--state->memory_counter];
     state->memory[state->memory_counter] = NULL;
     return t;

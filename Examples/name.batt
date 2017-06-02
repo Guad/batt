@@ -1,4 +1,4 @@
 "Enter your name" println
 
-"Good morning " getln +
+"Good morning " getln concat
 println
