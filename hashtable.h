@@ -1,6 +1,6 @@
 #pragma once
 
-#define MAX_CELLS 500
+#define MAX_CELLS 512
 
 typedef void (*func_ptr)(struct program_state_s *state);
 

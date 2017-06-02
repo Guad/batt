@@ -53,8 +53,11 @@ void ftoa(float n, char *res)
     if (fpart != 0)
         res[counter++ + offset] = '.';  
     
-    while (fpart != 0)
-        res[counter++ + offset] = ((int)fpart * 10) % 10 + '0';
+    while (fpart - (int) fpart > 10e-6) // Only take in account first 6 digits
+    {
+        fpart *= 10;
+        res[counter++ + offset] = ((int)fpart) % 10 + '0';
+    }
 
     res[counter + offset] = '\0';
 }
@@ -84,8 +87,7 @@ int try_get_string(token *t, char *target)
         return 1;
     }
     else if (t->type == literal_number)
-    {
-        
+    {        
         float num = t->value.literal;
         ftoa(num, target);
         
@@ -93,6 +95,15 @@ int try_get_string(token *t, char *target)
     }
 
     return 0;
+}
+
+void dump_token(token *t)
+{
+    char buffer[256];
+    if (try_get_string(t, buffer))
+    {
+        puts(buffer);
+    }
 }
 
 /* FUNCTIONS */
@@ -535,6 +546,43 @@ void pass(program_state *state)
     
 }
 
+void dump(program_state *state)
+{
+    char buffer[256];
+    for (int i = 0; i < state->memory_counter; i++)
+    {
+        if (try_get_string(state->memory[i], buffer))
+        {
+            printf("%s", buffer);
+        }
+        printf(", ");
+    }
+
+    putchar('\n');
+}
+
+void trunk(program_state *state)
+{
+    token *right_t = memory_pop(state);
+    float right;
+
+    if (try_get_number(right_t, &right))
+    {
+        token *new = malloc(sizeof(token));
+        new->type = literal_number;
+        new->value.literal = (float) (int) right;
+
+        memory_push(state, new);
+    }
+    else
+    {
+        puts("Expected number for trunk");
+        abort_program(state);
+    }
+
+    free_token(right_t);
+}
+
 void init_table()
 {
     g_calltable = create_calltable();
@@ -562,7 +610,8 @@ void init_table()
     calltable_set(g_calltable, "!", &not);
     calltable_set(g_calltable, "pass", &pass);
     calltable_set(g_calltable, "concat", &concat);
-
+    calltable_set(g_calltable, "dump", &dump);
+    calltable_set(g_calltable, "trunk", &trunk);
 }
 
 int try_call(program_state *state, char *name)

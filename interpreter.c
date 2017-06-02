@@ -11,7 +11,7 @@
 
 void memory_push(program_state *state, token *data)
 {
-    if (state->memory_counter == MAX_STACK_SIZE - 1)
+    if (state->memory_counter == MAX_STACK_SIZE)
     {
         puts("ERROR: Stack overflow");
         abort_program(state);
@@ -83,7 +83,7 @@ int contains(void **array, int len, void *target)
 // Clean up the program's memory.
 void clean(program_state *state)
 {
-    void** pointers = malloc(sizeof(void*) * state->program_size + state->memory_counter);
+    void** pointers = malloc(sizeof(void*) * (state->program_size + state->memory_counter));
     int sharedcounter = 0;
 
     for (int i = 0; i < state->program_size; ++i)
