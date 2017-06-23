@@ -31,6 +31,8 @@ int digitcount(int n)
 
 void ftoa(float n, char *res)
 {
+	int isnegative = n < 0;
+	n = fabs(n);
     int ipart = (int)n;
     float fpart = n - (float)ipart;
  
@@ -38,7 +40,7 @@ void ftoa(float n, char *res)
     int counter = 0;
     int offset = 0;
 
-    if (n < 0)
+    if (isnegative)
     {
         res[0] = '-';
         offset = 1;

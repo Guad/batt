@@ -1,0 +1,30 @@
+proc cosine_commentated
+    1 swap ; 1 x
+    dup dup * ; 1 x x^2
+    dup * ; 1 x x^4
+    24 / ; 1 x (x^4)/24
+    swap ; 1 (x^4)/24 x
+    dup dup * ; 1 (x^4)/24 x x^2
+    dup dup * * ; 1 (x^4)/24 x x^8
+    40320 / ; 1 (x^4)/24 x (x^8)/40320
+    swap ; 1 (x^4)/24 (x^8)/40320 x
+    dup dup * ; 1 (x^4)/24 (x^8)/40320 x x^2
+    2 / ; 1 (x^4)/24 (x^8)/40320 x (x^2)/2
+    swap ; 1 (x^4)/24 (x^8)/40320 (x^2)/2 x
+    dup dup dup * * ; 1 (x^4)/24 (x^8)/40320 (x^2)/2 x x^3
+    dup * ; 1 (x^4)/24 (x^8)/40320 (x^2)/2 x x^6
+    720 / ; 1 (x^4)/24 (x^8)/40320 (x^2)/2 x (x^6)/720
+    swap pop ; 1 (x^4)/24 (x^8)/40320 (x^2)/2 (x^6)/720
+    + - + +
+end
+
+proc cosine
+    1 swap dup dup * dup * 24 /
+    swap dup dup * dup dup * * 40320 /
+    swap dup dup * 2 /
+    swap dup dup dup * * dup * 720 /
+    swap pop + - + +
+end
+
+getln cosine
+println
