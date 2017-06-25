@@ -1,0 +1,12 @@
+"Choose an option" println
+"1. Rock" println
+"2. Paper" println
+"3. Scissors" println
+
+rand 3 %
+getln 1 -
+- 3 %
+dup 0 = "You have tied!" "" ifelse swap
+dup 1 = "You have lost!" "" ifelse swap
+2 = "You have won!" "" ifelse swap
+print print println

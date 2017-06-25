@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <time.h>
 
 #include "functions.h"
 #include "interpreter.h"
@@ -218,7 +219,8 @@ void mod(program_state *state)
     {
         token *new = malloc(sizeof(token));
         new->type = literal_number;
-        new->value.literal = (float)((int)left % (int)right);
+        int left_i = (int)left, right_i = (int)right;
+        new->value.literal = (float)((left_i % right_i + right_i) % right_i);
         memory_push(state, new);
     }
     else
@@ -585,8 +587,18 @@ void trunk(program_state *state)
     free_token(right_t);
 }
 
+void rand_f(program_state *state)
+{
+    token *output = malloc(sizeof(token));
+    output->type = literal_number;
+    output->value.literal = (float) rand();
+
+    memory_push(state, output);
+}
+
 void init_table()
 {
+    srand(time(NULL));
     g_calltable = create_calltable();
 
     calltable_set(g_calltable, "+", &sum);
@@ -614,6 +626,7 @@ void init_table()
     calltable_set(g_calltable, "concat", &concat);
     calltable_set(g_calltable, "dump", &dump);
     calltable_set(g_calltable, "trunk", &trunk);
+    calltable_set(g_calltable, "rand", &rand_f);
 }
 
 int try_call(program_state *state, char *name)
