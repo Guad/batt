@@ -35,8 +35,28 @@ void table_set(hashtable *table, char *key, int value)
     unsigned long int hash;
     int cell = get_cell(key, &hash);
 
-    table->cells[cell] = value;
-    table->hashes[cell] = hash;
+    table_chain_int **target, *current;
+    current = table->cells[cell];
+    target = &table->cells[cell];
+    
+    while (current != NULL)
+    {
+        if (current->hash == hash)
+        {
+            current->value = value;
+            return;
+        }
+
+        target = &current->next;
+        current = current->next;
+    }
+
+    table_chain_int *newChain = malloc(sizeof(table_chain_int));
+    newChain->next = NULL;
+    newChain->value = value;
+    newChain->hash = hash;
+
+    *target = newChain;
 }
 
 int table_get(hashtable *table, char *key)
@@ -44,16 +64,35 @@ int table_get(hashtable *table, char *key)
     unsigned long int hash;
     int cell = get_cell(key, &hash);
 
-    if (hash != table->hashes[cell])
-        return 0; // In case of a hash collision, return default value.
-    return table->cells[cell];
+    table_chain_int *current;
+    current = table->cells[cell];
+
+    while (current != NULL)
+    {
+        if (current->hash == hash)
+            return current->value;
+        current = current->next;
+    }
+
+    return 0;
 }
 
 int table_exists(hashtable *table, char *key)
 {
     unsigned long int hash;
     int cell = get_cell(key, &hash);
-    return table->cells[cell] != 0 && table->hashes[cell] == hash;
+
+    table_chain_int *current;
+    current = table->cells[cell];
+
+    while (current != NULL)
+    {
+        if (current->hash == hash)
+            return 1;
+        current = current->next;
+    }
+
+    return 0;
 }
 
 calltable* create_calltable()
@@ -68,8 +107,28 @@ void calltable_set(calltable *table, char *key, func_ptr value)
     unsigned long int hash;
     int cell = get_cell(key, &hash);
 
-    table->cells[cell] = value;
-    table->hashes[cell] = hash;
+    table_chain_funcptr **target, *current;
+    current = table->cells[cell];
+    target = &table->cells[cell];
+
+    while (current != NULL)
+    {
+        if (current->hash == hash)
+        {
+            current->value = value;
+            return;
+        }
+
+        target = &current->next;
+        current = current->next;
+    }
+
+    table_chain_funcptr *newChain = malloc(sizeof(table_chain_funcptr));
+    newChain->next = NULL;
+    newChain->value = value;
+    newChain->hash = hash;
+
+    *target = newChain;
 }
 
 func_ptr calltable_get(calltable *table, char *key)
@@ -77,14 +136,33 @@ func_ptr calltable_get(calltable *table, char *key)
     unsigned long int hash;
     int cell = get_cell(key, &hash);
 
-    if (hash != table->hashes[cell])
-        return 0;
-    return table->cells[cell];
+    table_chain_funcptr *current;
+    current = table->cells[cell];
+
+    while (current != NULL)
+    {
+        if (current->hash == hash)
+            return current->value;
+        current = current->next;
+    }
+
+    return 0;
 }
 
 int calltable_exists(calltable *table, char *key)
 {
     unsigned long int hash;
     int cell = get_cell(key, &hash);
-    return table->cells[cell] != 0 && table->hashes[cell] == hash;
+
+    table_chain_funcptr *current;
+    current = table->cells[cell];
+
+    while (current != NULL)
+    {
+        if (current->hash == hash)
+            return 1;
+        current = current->next;
+    }
+
+    return 0;
 }

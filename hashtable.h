@@ -4,15 +4,29 @@
 
 typedef void (*func_ptr)(struct program_state_s *state);
 
+typedef struct table_chain_int_t
+{
+    unsigned long int hash;
+    int value;
+    struct table_chain_int_t *next;
+} table_chain_int;
+
+typedef struct table_chain_funcptr_t
+{
+    unsigned long int hash;
+    func_ptr value;
+    struct table_chain_funcptr_t *next;
+} table_chain_funcptr;
+
 typedef struct
 {
-    int cells[MAX_CELLS];
+    table_chain_int *cells[MAX_CELLS];
     unsigned long int hashes[MAX_CELLS];
 } hashtable;
 
 typedef struct
 {
-    func_ptr cells[MAX_CELLS];
+    table_chain_funcptr *cells[MAX_CELLS];
     unsigned long int hashes[MAX_CELLS];
 } calltable;
 
