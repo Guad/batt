@@ -1,0 +1,22 @@
+; logic.batt - Demonstrates comparison and logical operators
+
+; Comparison operators
+"5 >= 3 = " print 5 3 >= println
+"3 >= 5 = " print 3 5 >= println
+"5 >= 5 = " print 5 5 >= println
+
+"3 <= 5 = " print 3 5 <= println
+"5 <= 3 = " print 5 3 <= println
+
+"3 != 5 = " print 3 5 != println
+"5 != 5 = " print 5 5 != println
+
+; Logical operators
+"1 and 1 = " print 1 1 and println
+"1 and 0 = " print 1 0 and println
+"0 or 1 = " print 0 1 or println
+"0 or 0 = " print 0 0 or println
+
+; Combined: is 7 between 1 and 10?
+"7 is between 1 and 10: " print
+7 1 >= 7 10 <= and println

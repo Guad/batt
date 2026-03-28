@@ -1,0 +1,21 @@
+; stack.batt - Demonstrates stack operations: rot, nip, depth
+
+; rot: rotate top 3 elements (a b c -- b c a)
+"rot(1, 2, 3):" println
+1 2 3 rot
+; stack is now: 2 3 1
+println println println
+
+; nip: remove second element (a b -- b)
+"nip(10, 20) = " print
+10 20 nip
+println
+
+; depth: push current stack depth
+"Empty stack depth = " print
+depth println
+
+1 2 3
+"Stack depth with 3 items = " print
+depth println
+pop pop pop

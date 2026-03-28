@@ -596,6 +596,423 @@ void rand_f(program_state *state)
     memory_push(state, output);
 }
 
+/* MATH FUNCTIONS */
+
+void abs_f(program_state *state)
+{
+    token *right_t = memory_pop(state);
+    float right;
+
+    if (try_get_number(right_t, &right))
+    {
+        token *new = malloc(sizeof(token));
+        new->type = literal_number;
+        new->value.literal = fabs(right);
+        memory_push(state, new);
+    }
+    else
+    {
+        puts("Expected number for abs");
+        abort_program(state);
+    }
+
+    free_token(right_t);
+}
+
+void neg_f(program_state *state)
+{
+    token *right_t = memory_pop(state);
+    float right;
+
+    if (try_get_number(right_t, &right))
+    {
+        token *new = malloc(sizeof(token));
+        new->type = literal_number;
+        new->value.literal = -right;
+        memory_push(state, new);
+    }
+    else
+    {
+        puts("Expected number for neg");
+        abort_program(state);
+    }
+
+    free_token(right_t);
+}
+
+void min_f(program_state *state)
+{
+    token *right_t = memory_pop(state);
+    token *left_t = memory_pop(state);
+    float right, left;
+
+    if (try_get_number(right_t, &right) && try_get_number(left_t, &left))
+    {
+        token *new = malloc(sizeof(token));
+        new->type = literal_number;
+        new->value.literal = left < right ? left : right;
+        memory_push(state, new);
+    }
+    else
+    {
+        puts("Expected two numbers for min");
+        abort_program(state);
+    }
+
+    free_token(right_t);
+    free_token(left_t);
+}
+
+void max_f(program_state *state)
+{
+    token *right_t = memory_pop(state);
+    token *left_t = memory_pop(state);
+    float right, left;
+
+    if (try_get_number(right_t, &right) && try_get_number(left_t, &left))
+    {
+        token *new = malloc(sizeof(token));
+        new->type = literal_number;
+        new->value.literal = left > right ? left : right;
+        memory_push(state, new);
+    }
+    else
+    {
+        puts("Expected two numbers for max");
+        abort_program(state);
+    }
+
+    free_token(right_t);
+    free_token(left_t);
+}
+
+void pow_f(program_state *state)
+{
+    token *right_t = memory_pop(state);
+    token *left_t = memory_pop(state);
+    float right, left;
+
+    if (try_get_number(right_t, &right) && try_get_number(left_t, &left))
+    {
+        token *new = malloc(sizeof(token));
+        new->type = literal_number;
+        new->value.literal = (float)pow(left, right);
+        memory_push(state, new);
+    }
+    else
+    {
+        puts("Expected two numbers for pow");
+        abort_program(state);
+    }
+
+    free_token(right_t);
+    free_token(left_t);
+}
+
+void sqrt_f(program_state *state)
+{
+    token *right_t = memory_pop(state);
+    float right;
+
+    if (try_get_number(right_t, &right))
+    {
+        token *new = malloc(sizeof(token));
+        new->type = literal_number;
+        new->value.literal = (float)sqrt(right);
+        memory_push(state, new);
+    }
+    else
+    {
+        puts("Expected number for sqrt");
+        abort_program(state);
+    }
+
+    free_token(right_t);
+}
+
+/* COMPARISON OPERATORS */
+
+void gte(program_state *state)
+{
+    token *second = memory_pop(state);
+    token *first = memory_pop(state);
+    token *output = malloc(sizeof(token));
+
+    output->type = literal_number;
+    output->value.literal = 0;
+
+    float f_first = 0, f_second = 0;
+
+    if (try_get_number(first, &f_first) && try_get_number(second, &f_second))
+    {
+        output->value.literal = f_first >= f_second ? 1 : 0;
+    }
+    else
+    {
+        puts("Expected two numbers for >= operator.");
+        abort_program(state);
+    }
+
+    memory_push(state, output);
+
+    free_token(first);
+    free_token(second);
+}
+
+void lte(program_state *state)
+{
+    token *second = memory_pop(state);
+    token *first = memory_pop(state);
+    token *output = malloc(sizeof(token));
+
+    output->type = literal_number;
+    output->value.literal = 0;
+
+    float f_first = 0, f_second = 0;
+
+    if (try_get_number(first, &f_first) && try_get_number(second, &f_second))
+    {
+        output->value.literal = f_first <= f_second ? 1 : 0;
+    }
+    else
+    {
+        puts("Expected two numbers for <= operator.");
+        abort_program(state);
+    }
+
+    memory_push(state, output);
+
+    free_token(first);
+    free_token(second);
+}
+
+void neq(program_state *state)
+{
+    token *first = memory_pop(state);
+    token *second = memory_pop(state);
+    token *output = malloc(sizeof(token));
+    output->type = literal_number;
+    output->value.literal = 1;
+
+    float f_first = 0, f_second = 0;
+
+    if (try_get_number(first, &f_first) && try_get_number(second, &f_second))
+    {
+        output->value.literal = f_first != f_second ? 1 : 0;
+    }
+    else
+    {
+        char buf1[256], buf2[256];
+        if (try_get_string(first, buf1) && try_get_string(second, buf2))
+        {
+            output->value.literal = strcmp(buf1, buf2) != 0 ? 1 : 0;
+        }
+    }
+
+    memory_push(state, output);
+
+    free_token(first);
+    free_token(second);
+}
+
+/* LOGICAL OPERATORS */
+
+void and_f(program_state *state)
+{
+    token *right_t = memory_pop(state);
+    token *left_t = memory_pop(state);
+    float right, left;
+
+    token *output = malloc(sizeof(token));
+    output->type = literal_number;
+    output->value.literal = 0;
+
+    if (try_get_number(right_t, &right) && try_get_number(left_t, &left))
+    {
+        output->value.literal = (left != 0 && right != 0) ? 1 : 0;
+    }
+    else
+    {
+        puts("Expected two numbers for and.");
+        abort_program(state);
+    }
+
+    memory_push(state, output);
+
+    free_token(right_t);
+    free_token(left_t);
+}
+
+void or_f(program_state *state)
+{
+    token *right_t = memory_pop(state);
+    token *left_t = memory_pop(state);
+    float right, left;
+
+    token *output = malloc(sizeof(token));
+    output->type = literal_number;
+    output->value.literal = 0;
+
+    if (try_get_number(right_t, &right) && try_get_number(left_t, &left))
+    {
+        output->value.literal = (left != 0 || right != 0) ? 1 : 0;
+    }
+    else
+    {
+        puts("Expected two numbers for or.");
+        abort_program(state);
+    }
+
+    memory_push(state, output);
+
+    free_token(right_t);
+    free_token(left_t);
+}
+
+/* STACK OPERATIONS */
+
+void rot(program_state *state)
+{
+    token *c = memory_pop(state);
+    token *b = memory_pop(state);
+    token *a = memory_pop(state);
+
+    memory_push(state, b);
+    memory_push(state, c);
+    memory_push(state, a);
+}
+
+void nip(program_state *state)
+{
+    token *top = memory_pop(state);
+    token *second = memory_pop(state);
+
+    memory_push(state, top);
+    free_token(second);
+}
+
+void depth_f(program_state *state)
+{
+    token *output = malloc(sizeof(token));
+    output->type = literal_number;
+    output->value.literal = (float)state->memory_counter;
+
+    memory_push(state, output);
+}
+
+/* STRING OPERATIONS */
+
+void len_f(program_state *state)
+{
+    token *right_t = memory_pop(state);
+    char buffer[256];
+
+    if (try_get_string(right_t, buffer))
+    {
+        token *new = malloc(sizeof(token));
+        new->type = literal_number;
+        new->value.literal = (float)strlen(buffer);
+        memory_push(state, new);
+    }
+    else
+    {
+        puts("Expected string for len");
+        abort_program(state);
+    }
+
+    free_token(right_t);
+}
+
+void upper_f(program_state *state)
+{
+    token *right_t = memory_pop(state);
+    char buffer[256];
+
+    if (try_get_string(right_t, buffer))
+    {
+        int slen = strlen(buffer);
+        char *result = malloc(sizeof(char) * (slen + 1));
+        for (int i = 0; i < slen; i++)
+        {
+            if (buffer[i] >= 'a' && buffer[i] <= 'z')
+                result[i] = buffer[i] - 32;
+            else
+                result[i] = buffer[i];
+        }
+        result[slen] = '\0';
+
+        token *new = malloc(sizeof(token));
+        new->type = literal_string;
+        new->value.data = result;
+        memory_push(state, new);
+    }
+    else
+    {
+        puts("Expected string for upper");
+        abort_program(state);
+    }
+
+    free_token(right_t);
+}
+
+void lower_f(program_state *state)
+{
+    token *right_t = memory_pop(state);
+    char buffer[256];
+
+    if (try_get_string(right_t, buffer))
+    {
+        int slen = strlen(buffer);
+        char *result = malloc(sizeof(char) * (slen + 1));
+        for (int i = 0; i < slen; i++)
+        {
+            if (buffer[i] >= 'A' && buffer[i] <= 'Z')
+                result[i] = buffer[i] + 32;
+            else
+                result[i] = buffer[i];
+        }
+        result[slen] = '\0';
+
+        token *new = malloc(sizeof(token));
+        new->type = literal_string;
+        new->value.data = result;
+        memory_push(state, new);
+    }
+    else
+    {
+        puts("Expected string for lower");
+        abort_program(state);
+    }
+
+    free_token(right_t);
+}
+
+/* LOOP CONSTRUCT */
+
+void times_f(program_state *state)
+{
+    token *body_t = memory_pop(state);
+    token *count_t = memory_pop(state);
+    float count;
+
+    if (try_get_number(count_t, &count))
+    {
+        int n = (int)count;
+        for (int i = 0; i < n; i++)
+        {
+            execute_token(state, body_t);
+        }
+    }
+    else
+    {
+        puts("Expected number for times");
+        abort_program(state);
+    }
+
+    free_token(body_t);
+    free_token(count_t);
+}
+
 void init_table()
 {
     srand(time(NULL));
@@ -627,6 +1044,30 @@ void init_table()
     calltable_set(g_calltable, "dump", &dump);
     calltable_set(g_calltable, "trunk", &trunk);
     calltable_set(g_calltable, "rand", &rand_f);
+
+    calltable_set(g_calltable, "abs", &abs_f);
+    calltable_set(g_calltable, "neg", &neg_f);
+    calltable_set(g_calltable, "min", &min_f);
+    calltable_set(g_calltable, "max", &max_f);
+    calltable_set(g_calltable, "pow", &pow_f);
+    calltable_set(g_calltable, "sqrt", &sqrt_f);
+
+    calltable_set(g_calltable, ">=", &gte);
+    calltable_set(g_calltable, "<=", &lte);
+    calltable_set(g_calltable, "!=", &neq);
+
+    calltable_set(g_calltable, "and", &and_f);
+    calltable_set(g_calltable, "or", &or_f);
+
+    calltable_set(g_calltable, "rot", &rot);
+    calltable_set(g_calltable, "nip", &nip);
+    calltable_set(g_calltable, "depth", &depth_f);
+
+    calltable_set(g_calltable, "len", &len_f);
+    calltable_set(g_calltable, "upper", &upper_f);
+    calltable_set(g_calltable, "lower", &lower_f);
+
+    calltable_set(g_calltable, "times", &times_f);
 }
 
 int try_call(program_state *state, char *name)

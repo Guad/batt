@@ -1,0 +1,13 @@
+; strings.batt - Demonstrates string operations: len, upper, lower, concat
+
+"hello world" dup len
+"Length of 'hello world' = " print println
+
+"hello" upper
+"upper('hello') = " print println
+
+"WORLD" lower
+"lower('WORLD') = " print println
+
+"Hello" " " concat "World" concat
+"concat result = " print println

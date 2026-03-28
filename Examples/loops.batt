@@ -1,0 +1,25 @@
+; loops.batt - Demonstrates the times loop construct
+
+; Print "Hello!" 5 times using a proc
+proc say_hello
+    "Hello!" println
+end
+
+5 @say_hello times
+
+; Countdown ticks
+proc tick
+    "tick " print
+end
+
+5 @tick times
+"" println
+
+; Repeat an operation: add 1 ten times
+0
+proc add_one
+    1 +
+end
+
+10 @add_one times
+"0 + 1 (x10) = " print println

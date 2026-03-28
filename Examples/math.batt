@@ -1,0 +1,28 @@
+; math.batt - Demonstrates math functions: abs, neg, min, max, pow, sqrt
+
+; Absolute value
+"abs(-7) = " print
+7 neg abs println
+
+; Negate
+"neg(42) = " print
+42 neg println
+
+; Min and max
+"min(3, 8) = " print
+3 8 min println
+
+"max(3, 8) = " print
+3 8 max println
+
+; Power
+"2^10 = " print
+2 10 pow println
+
+; Square root
+"sqrt(144) = " print
+144 sqrt println
+
+; Pythagorean theorem: sqrt(3^2 + 4^2) = 5
+"sqrt(3^2 + 4^2) = " print
+3 2 pow 4 2 pow + sqrt println
